@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { News } from '@shared/schema';
 import { Link } from 'wouter';
 import { Badge } from '@/components/ui/badge';
+import { ArrowRight, CircleAlert, Flame, Leaf, Star } from 'lucide-react';
 
 interface NewsResponse {
   news: News[];
@@ -17,6 +18,7 @@ const NewsBanner = () => {
   const [scrollLeft, setScrollLeft] = useState(0);
   const [showLeftGradient, setShowLeftGradient] = useState(false);
   const [showRightGradient, setShowRightGradient] = useState(true);
+  const [activeItem, setActiveItem] = useState<number | null>(null);
 
   const { data, isLoading } = useQuery<NewsResponse>({ 
     queryKey: ['/api/news?featured=true']
@@ -43,6 +45,36 @@ const NewsBanner = () => {
       return () => scrollElement.removeEventListener('scroll', handleScroll);
     }
   }, [data]);
+
+  // Автоматическая анимированная прокрутка каждые 6 секунд
+  useEffect(() => {
+    if (newsItems.length <= 1) return;
+    
+    const timer = setInterval(() => {
+      if (scrollRef.current && !isDragging) {
+        const { scrollLeft, clientWidth, scrollWidth } = scrollRef.current;
+        
+        if (scrollLeft + clientWidth >= scrollWidth - 20) {
+          // Если достигли конца, прокручиваем к началу с анимацией
+          scrollRef.current.scrollTo({
+            left: 0,
+            behavior: 'smooth'
+          });
+        } else {
+          // Иначе прокручиваем на ширину одного элемента
+          scrollRef.current.scrollBy({
+            left: 320, // Примерная ширина элемента
+            behavior: 'smooth'
+          });
+        }
+        
+        // Обновляем градиенты после прокрутки
+        setTimeout(handleScroll, 500);
+      }
+    }, 6000);
+    
+    return () => clearInterval(timer);
+  }, [newsItems.length, isDragging]);
 
   // Обработчики мыши для драг-н-дроп скроллинга
   const handleMouseDown = (e: React.MouseEvent) => {
@@ -111,6 +143,20 @@ const NewsBanner = () => {
     }
   };
 
+  // Получение иконки по типу новости
+  const getBadgeIcon = (type: string) => {
+    switch (type) {
+      case 'news':
+        return <Star className="h-3 w-3 mr-1" />;
+      case 'promotion':
+        return <Flame className="h-3 w-3 mr-1" />;
+      case 'event':
+        return <Leaf className="h-3 w-3 mr-1" />;
+      default:
+        return <CircleAlert className="h-3 w-3 mr-1" />;
+    }
+  };
+
   const getBadgeText = (type: string) => {
     switch (type) {
       case 'news':
@@ -124,12 +170,29 @@ const NewsBanner = () => {
     }
   };
 
+  // Скелетон загрузки
   if (isLoading) {
     return (
-      <div className="relative rounded-lg overflow-hidden bg-card">
-        <div className="flex gap-6 p-4 animate-pulse">
+      <div className="relative w-full overflow-hidden bg-gradient-to-r from-card/50 to-secondary/10 rounded-lg">
+        <div className="flex gap-6 py-6 px-4 animate-pulse overflow-hidden">
           {[...Array(3)].map((_, index) => (
-            <div key={index} className="min-w-[280px] md:min-w-[320px] flex-shrink-0 bg-secondary/30 rounded-lg h-[320px]"></div>
+            <div 
+              key={index} 
+              className="min-w-[300px] md:min-w-[400px] flex-shrink-0 rounded-lg h-[360px] relative overflow-hidden"
+              style={{ 
+                animationDelay: `${index * 0.2}s`,
+                animation: 'pulse 2s cubic-bezier(.4,0,.6,1) infinite'
+              }}
+            >
+              <div className="h-[200px] w-full bg-secondary/40 rounded-t-lg"></div>
+              <div className="p-4 space-y-3">
+                <div className="h-6 bg-secondary/40 rounded w-1/3"></div>
+                <div className="h-5 bg-secondary/30 rounded w-full"></div>
+                <div className="h-5 bg-secondary/30 rounded w-5/6"></div>
+                <div className="h-5 bg-secondary/30 rounded w-3/4"></div>
+                <div className="h-4 bg-secondary/40 rounded w-1/4 mt-6"></div>
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -141,16 +204,32 @@ const NewsBanner = () => {
   }
 
   return (
-    <div className="relative">
+    <div className="relative w-full py-2 md:py-6 -mx-4 px-4 md:mx-0 md:px-0">
       {/* Левый градиент для индикации горизонтального скролла */}
       {showLeftGradient && (
-        <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none" />
       )}
       
       {/* Правый градиент для индикации горизонтального скролла */}
       {showRightGradient && (
-        <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-background via-background/80 to-transparent z-10 pointer-events-none" />
       )}
+      
+      {/* Индикатор скролла */}
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-20 flex space-x-1 mb-1 md:mb-0">
+        {newsItems.map((_, index) => (
+          <div 
+            key={index}
+            className={`h-1 rounded-full transition-all duration-300 ${
+              scrollRef.current && 
+              index * 320 <= scrollRef.current.scrollLeft && 
+              (index + 1) * 320 > scrollRef.current.scrollLeft
+                ? 'w-6 bg-primary' 
+                : 'w-2 bg-secondary/50'
+            }`}
+          />
+        ))}
+      </div>
       
       {/* Скроллируемый контейнер */}
       <div 
@@ -170,38 +249,61 @@ const NewsBanner = () => {
           msOverflowStyle: 'none'
         }}
       >
-        <div className="flex gap-6 py-4 px-2">
-          {newsItems.map((item) => (
+        <div className="flex gap-6 py-2 px-4 md:px-8 min-h-[340px] md:min-h-[420px]">
+          {newsItems.map((item, index) => (
             <div 
               key={item.id} 
-              className="min-w-[280px] md:min-w-[320px] flex-shrink-0 bg-card rounded-lg overflow-hidden border border-border/40 hover:shadow-md transition-all duration-300"
+              className={`relative min-w-[300px] md:min-w-[400px] flex-shrink-0 bg-card rounded-lg overflow-hidden border border-border/40 hover:shadow-lg transition-all duration-500 ${
+                activeItem === item.id ? 'ring-2 ring-primary' : ''
+              }`}
+              onMouseEnter={() => setActiveItem(item.id)}
+              onMouseLeave={() => setActiveItem(null)}
+              style={{
+                transform: `translateY(${isDragging ? 0 : '0px'})`,
+                transition: 'all 0.5s ease',
+                animationDelay: `${index * 0.15}s`,
+                animation: 'fadeInUp 0.5s ease-out forwards',
+                opacity: 0,
+              }}
             >
-              <div className="h-40 relative overflow-hidden">
+              <div className="h-48 md:h-60 relative overflow-hidden">
                 <img 
                   src={item.imageUrl} 
                   alt={item.title} 
-                  className="w-full h-full object-cover transition-transform hover:scale-105 duration-500"
+                  className="w-full h-full object-cover transition-transform duration-1000"
+                  style={{
+                    transform: activeItem === item.id ? 'scale(1.05)' : 'scale(1)',
+                  }}
+                  loading="lazy"
                 />
-                <div className="absolute top-3 left-3">
-                  <Badge className={getBadgeClass(item.type)}>
-                    {getBadgeText(item.type)}
-                  </Badge>
+                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                  <div className="flex justify-between items-center">
+                    <Badge className={`${getBadgeClass(item.type)} flex items-center px-3 py-1`}>
+                      {getBadgeIcon(item.type)}
+                      {getBadgeText(item.type)}
+                    </Badge>
+                    <div className="text-xs text-white/80 bg-black/40 px-2 py-1 rounded backdrop-blur-sm">
+                      {new Date(item.publishDate || item.createdAt).toLocaleDateString('ru-RU')}
+                    </div>
+                  </div>
                 </div>
               </div>
-              <div className="p-4">
-                <h3 className="font-unbounded text-lg mb-2 line-clamp-2">{item.title}</h3>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{item.description}</p>
-                <Link href={`/news/${item.id}`} className="inline-block text-sm text-primary hover:text-primary/80 transition-all">
-                  Подробнее
-                  <svg 
-                    xmlns="http://www.w3.org/2000/svg" 
-                    className="h-4 w-4 inline-block ml-1" 
-                    fill="none" 
-                    viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                  </svg>
+              <div className="p-4 md:p-6">
+                <h3 className="font-unbounded text-lg md:text-xl mb-3 line-clamp-2 transition-colors duration-300"
+                  style={{
+                    color: activeItem === item.id ? 'hsl(var(--primary))' : ''
+                  }}
+                >
+                  {item.title}
+                </h3>
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-3 md:line-clamp-4">{item.description}</p>
+                <Link 
+                  href={`/news/${item.id}`} 
+                  className="inline-flex items-center text-sm text-primary hover:text-primary/90 transition-all group mt-2"
+                >
+                  <span className="border-b border-transparent group-hover:border-primary transition-all">Подробнее</span>
+                  <ArrowRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
             </div>
