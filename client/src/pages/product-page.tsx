@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useParams, Link } from 'wouter';
-import { CheckCircle, XCircle, ChevronRight } from 'lucide-react';
+import { CheckCircle, XCircle, ChevronRight, MessageCircle, Package } from 'lucide-react';
 import { Product } from '@shared/schema';
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 import { Badge } from '@/components/ui/badge';
@@ -144,7 +144,7 @@ const ProductPage = () => {
           <div className="mb-6">
             <h2 className="text-lg font-semibold mb-2">Наличие в магазинах</h2>
             <div className="space-y-2">
-              {product.availability.map((store) => (
+              {product.availability && product.availability.map((store) => (
                 <div key={store.storeId} className="flex items-center">
                   {store.isAvailable ? (
                     <CheckCircle className="text-green-500 mr-2 h-5 w-5" />
@@ -170,8 +170,8 @@ const ProductPage = () => {
           
           <Tabs defaultValue="specifications" className="mt-6">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="specifications">Характеристики</TabsTrigger>
-              <TabsTrigger value="reviews">Отзывы</TabsTrigger>
+              <TabsTrigger value="specifications" className="text-primary-foreground">Характеристики</TabsTrigger>
+              <TabsTrigger value="package" className="text-primary-foreground">Комплектация</TabsTrigger>
             </TabsList>
             <TabsContent value="specifications" className="mt-4">
               <Card>
@@ -187,14 +187,51 @@ const ProductPage = () => {
                 </CardContent>
               </Card>
             </TabsContent>
-            <TabsContent value="reviews" className="mt-4">
+            <TabsContent value="package" className="mt-4">
               <Card>
                 <CardContent className="pt-6">
-                  <p className="text-center text-muted-foreground">Отзывов пока нет</p>
+                  <div className="flex items-center mb-4">
+                    <Package className="h-5 w-5 text-primary mr-2" />
+                    <h3 className="font-medium">В комплект поставки входит:</h3>
+                  </div>
+                  <ul className="space-y-2 list-disc pl-5">
+                    <li>1 шт. – {product.name}</li>
+                    <li>1 шт. – Фирменная упаковка</li>
+                    <li>1 шт. – Инструкция по эксплуатации</li>
+                    {product.categoryId === 4 && (
+                      <>
+                        <li>1 шт. – Зарядный кабель USB Type-C</li>
+                        <li>2 шт. – Сменная испарительная головка</li>
+                      </>
+                    )}
+                    {product.categoryId === 6 && (
+                      <>
+                        <li>20 г – Содержимое продукта</li>
+                        <li>1 шт. – Герметичная упаковка</li>
+                      </>
+                    )}
+                  </ul>
                 </CardContent>
               </Card>
             </TabsContent>
           </Tabs>
+          
+          <div className="mt-6">
+            <a 
+              href={`https://t.me/NnDogwithoutsmth?text=Здравствуйте, а можно уточнить по поводу "${product.name}" в вашем магазине?`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full"
+            >
+              <Button 
+                className="w-full gap-2 bg-[#0088cc] hover:bg-[#0077b5] text-white text-base" 
+                size="lg"
+              >
+                <MessageCircle className="h-5 w-5" />
+                Уточнить у менеджера
+              </Button>
+            </a>
+          </div>
         </div>
       </div>
       

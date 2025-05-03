@@ -26,10 +26,11 @@ const NewsBanner = () => {
   
   const newsItems = data?.news || [];
 
-  // Обновляем градиенты когда скроллим
+  // Обновляем индикаторы прокрутки
   const handleScroll = () => {
     if (scrollRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      // Мы больше не устанавливаем градиенты, но сохраняем функцию для индикаторов
       setShowLeftGradient(scrollLeft > 20);
       setShowRightGradient(scrollLeft < scrollWidth - clientWidth - 20);
     }
@@ -216,26 +217,16 @@ const NewsBanner = () => {
   }
 
   return (
-    <div className="relative w-full py-2 md:py-6 -mx-4 px-4 md:mx-0 md:px-0">
-      {/* Левый градиент для индикации горизонтального скролла */}
-      {showLeftGradient && (
-        <div className="absolute left-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-r from-background via-background/80 to-transparent z-10 pointer-events-none" />
-      )}
-      
-      {/* Правый градиент для индикации горизонтального скролла */}
-      {showRightGradient && (
-        <div className="absolute right-0 top-0 bottom-0 w-12 md:w-24 bg-gradient-to-l from-background via-background/80 to-transparent z-10 pointer-events-none" />
-      )}
-      
+    <div className="relative w-full max-w-7xl mx-auto py-2 md:py-6">
       {/* Индикатор скролла */}
-      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-20 flex space-x-1 mb-1 md:mb-0">
+      <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 z-20 flex space-x-1 mb-2">
         {newsItems.map((_, index) => (
           <div 
             key={index}
             className={`h-1.5 rounded-full transition-all duration-300 ${
               scrollRef.current && 
-              index * 370 <= scrollRef.current.scrollLeft && 
-              (index + 1) * 370 > scrollRef.current.scrollLeft
+              index * 300 <= scrollRef.current.scrollLeft && 
+              (index + 1) * 300 > scrollRef.current.scrollLeft
                 ? 'w-8 bg-primary' 
                 : 'w-2 bg-secondary/50'
             }`}
@@ -246,7 +237,7 @@ const NewsBanner = () => {
       {/* Скроллируемый контейнер */}
       <div 
         ref={scrollRef}
-        className="overflow-x-auto overflow-y-hidden scrollbar-hide"
+        className="overflow-x-auto overflow-y-hidden scrollbar-hide rounded-xl"
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
@@ -261,11 +252,11 @@ const NewsBanner = () => {
           msOverflowStyle: 'none'
         }}
       >
-        <div className="flex gap-6 py-2 px-4 md:px-8 min-h-[420px] md:min-h-[520px]">
+        <div className="flex gap-6 py-4 min-h-[380px] md:min-h-[460px] px-2">
           {newsItems.map((item, index) => (
             <div 
               key={item.id} 
-              className={`relative min-w-[100%] sm:min-w-[350px] md:min-w-[500px] flex-shrink-0 bg-card rounded-lg overflow-hidden border border-border/40 hover:shadow-lg transition-all duration-500 ${
+              className={`relative min-w-[85%] sm:min-w-[320px] md:min-w-[360px] max-w-sm flex-shrink-0 bg-card rounded-xl overflow-hidden border border-border/40 hover:shadow-xl transition-all duration-500 ${
                 activeItem === item.id ? 'ring-2 ring-primary' : ''
               }`}
               onMouseEnter={() => setActiveItem(item.id)}
@@ -278,7 +269,7 @@ const NewsBanner = () => {
                 opacity: 0,
               }}
             >
-              <div className="h-60 md:h-80 relative overflow-hidden">
+              <div className="h-52 md:h-60 relative overflow-hidden">
                 <img 
                   src={item.imageUrl} 
                   alt={item.title} 
@@ -288,6 +279,7 @@ const NewsBanner = () => {
                   }}
                   loading="lazy"
                 />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="flex justify-between items-center">
                     <Badge className={`${getBadgeClass(item.type)} flex items-center px-3 py-1 shadow-md`}>
@@ -300,18 +292,18 @@ const NewsBanner = () => {
                   </div>
                 </div>
               </div>
-              <div className="p-4 md:p-8">
-                <h3 className="font-unbounded text-lg md:text-2xl mb-4 line-clamp-2 transition-colors duration-300"
+              <div className="p-4">
+                <h3 className="font-unbounded text-lg md:text-xl mb-3 line-clamp-2 transition-colors duration-300"
                   style={{
                     color: activeItem === item.id ? 'hsl(var(--primary))' : ''
                   }}
                 >
                   {item.title}
                 </h3>
-                <p className="text-muted-foreground text-sm md:text-base mb-6 line-clamp-4 md:line-clamp-6">{item.description}</p>
+                <p className="text-muted-foreground text-sm mb-4 line-clamp-3">{item.description}</p>
                 <Link 
                   href={`/news/${item.id}`} 
-                  className="inline-flex items-center text-sm md:text-base text-primary hover:text-primary/90 transition-all group mt-2"
+                  className="inline-flex items-center text-sm text-primary hover:text-primary/90 transition-all group mt-2"
                 >
                   <span className="border-b border-transparent group-hover:border-primary transition-all">Подробнее</span>
                   <ArrowRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
