@@ -13,15 +13,23 @@ const HomePage = () => {
   
   return (
     <div>
-      {/* Hero Section */}
-      <section className="relative">
-        <div className="bg-card h-[400px] md:h-[600px] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 opacity-30 bg-gradient-to-b from-background to-secondary" />
-          <div className="container mx-auto px-4 relative z-10 text-center">
-            <h1 className="font-unbounded font-bold text-3xl md:text-6xl mb-4">DAMASK SHOP</h1>
-            <p className="text-lg md:text-2xl text-muted-foreground mb-6 md:mb-8">Магазин вейп продукции в Самаре</p>
+      {/* News & Promotions Hero Carousel */}
+      <section className="pt-8 pb-4 md:py-12 bg-gradient-to-b from-background to-card/30 relative">
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-unbounded text-xl md:text-3xl">Новости и акции</h2>
+            <Link href="/news" className="text-sm text-primary hover:underline">Все новости</Link>
+          </div>
+          <Carousel />
+          
+          {/* Quick Call-to-Action */}
+          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4 bg-card p-4 md:p-6 rounded-lg shadow-sm">
+            <div>
+              <h3 className="text-xl md:text-2xl font-unbounded mb-1">DAMASK SHOP</h3>
+              <p className="text-muted-foreground">Магазин вейп продукции в Самаре</p>
+            </div>
             <Link href="/catalog">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-medium">
+              <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white font-medium">
                 Смотреть каталог
               </Button>
             </Link>
@@ -108,17 +116,6 @@ const HomePage = () => {
               </div>
             </Link>
           </div>
-        </div>
-      </section>
-      
-      {/* News & Promotions Carousel */}
-      <section className="py-8 md:py-12 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="font-unbounded text-xl md:text-3xl">Новости и акции</h2>
-            <Link href="/news" className="text-sm text-primary hover:underline">Все новости</Link>
-          </div>
-          <Carousel />
         </div>
       </section>
       
