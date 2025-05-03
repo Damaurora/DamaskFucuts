@@ -196,151 +196,192 @@ export class DatabaseStorage implements IStorage {
     pageSize?: number;
     sortBy?: string;
   } = {}): Promise<{ products: Product[]; totalProducts: number; totalPages: number }> {
-    const {
-      search = '',
-      categoryId,
-      inStock,
-      storeId = [],
-      tags = [],
-      page = 1,
-      pageSize = 9,
-      sortBy = 'newest',
-    } = options;
-    
-    let query = db.select({
-      ...products,
-      categoryName: categories.name,
-      categorySlug: categories.slug,
-    })
-    .from(products)
-    .leftJoin(categories, eq(products.categoryId, categories.id));
-    
-    // Apply filters
-    if (search) {
-      try {
-        console.log(`Applying search filter: "${search}"`);
-        query = query.where(sql`${products.name} ILIKE ${'%' + search + '%'} OR ${products.description} ILIKE ${'%' + search + '%'}`);
-      } catch (error) {
-        console.error("Error applying search filter:", error);
-      }
-    }
-    
-    if (categoryId) {
-      query = query.where(eq(products.categoryId, categoryId));
-    }
-    
-    // Apply sorting
-    switch (sortBy) {
-      case 'newest':
-        query = query.orderBy(desc(products.createdAt));
-        break;
-      case 'popular':
-        // Assuming popularity could be implemented in the future
-        query = query.orderBy(desc(products.createdAt));
-        break;
-      case 'availability':
-        // This would depend on product availability, simplified here
-        query = query.orderBy(products.name);
-        break;
-      default:
-        query = query.orderBy(desc(products.createdAt));
-    }
-    
-    // Get total count for pagination with filters applied
-    let countQuery = db.select({ count: count() }).from(products);
-    
-    // Apply the same filters to the count query
-    if (search) {
-      try {
-        countQuery = countQuery.where(sql`${products.name} ILIKE ${'%' + search + '%'} OR ${products.description} ILIKE ${'%' + search + '%'}`);
-      } catch (error) {
-        console.error("Error applying search filter to count query:", error);
-      }
-    }
-    
-    if (categoryId) {
-      countQuery = countQuery.where(eq(products.categoryId, categoryId));
-    }
-    
-    const countResult = await countQuery;
-    const totalProducts = Number(countResult[0].count);
-    const totalPages = Math.ceil(totalProducts / pageSize);
-    
-    // Apply pagination
-    query = query.limit(pageSize).offset((page - 1) * pageSize);
-    
-    // Execute query
-    const productsResult = await query;
-    
-    // Get availability for these products
-    const productIds = productsResult.map(p => p.id);
-    
-    if (productIds.length === 0) {
-      return { products: [], totalProducts: 0, totalPages: 0 };
-    }
-    
-    const availabilityData = await db.select({
-      productId: productAvailability.productId,
-      storeId: productAvailability.storeId,
-      isAvailable: productAvailability.isAvailable,
-      storeName: stores.name,
-    })
-    .from(productAvailability)
-    .leftJoin(stores, eq(productAvailability.storeId, stores.id))
-    .where(sql`${productAvailability.productId} IN (${productIds.join(',')})`)
-    .orderBy(productAvailability.storeId);
-    
-    // Group availability by product
-    const availabilityByProduct: Record<number, Array<{
-      storeId: number;
-      storeName: string;
-      isAvailable: boolean;
-    }>> = {};
-    
-    for (const item of availabilityData) {
-      if (!availabilityByProduct[item.productId]) {
-        availabilityByProduct[item.productId] = [];
+    try {
+      console.log("getProducts called with options:", JSON.stringify(options));
+      
+      const {
+        search = '',
+        categoryId,
+        inStock,
+        storeId = [],
+        tags = [],
+        page = 1,
+        pageSize = 9,
+        sortBy = 'newest',
+      } = options;
+      
+      // Импортируем таблицы и модели из схемы здесь, чтобы избежать проблем с initialization
+      const { 
+        products: productsTable, 
+        categories: categoriesTable, 
+        productAvailability: productAvailabilityTable,
+        stores: storesTable 
+      } = await import("@shared/schema");
+      
+      // Сначала построим базовый запрос
+      let query = db.select({
+        id: productsTable.id,
+        name: productsTable.name,
+        slug: productsTable.slug,
+        description: productsTable.description,
+        categoryId: productsTable.categoryId,
+        imageUrl: productsTable.imageUrl,
+        specifications: productsTable.specifications,
+        tags: productsTable.tags,
+        createdAt: productsTable.createdAt,
+        updatedAt: productsTable.updatedAt,
+        createdBy: productsTable.createdBy,
+        categoryName: categoriesTable.name,
+        categorySlug: categoriesTable.slug,
+      })
+      .from(productsTable)
+      .leftJoin(categoriesTable, eq(productsTable.categoryId, categoriesTable.id));
+      
+      // Применяем фильтры
+      if (search && search.trim() !== '') {
+        try {
+          console.log(`Applying search filter: "${search}"`);
+          query = query.where(
+            sql`${productsTable.name} ILIKE ${'%' + search + '%'} OR ${productsTable.description} ILIKE ${'%' + search + '%'}`
+          );
+        } catch (error) {
+          console.error("Error applying search filter:", error);
+        }
       }
       
-      availabilityByProduct[item.productId].push({
-        storeId: item.storeId,
-        storeName: item.storeName || '',
-        isAvailable: item.isAvailable,
-      });
+      if (categoryId) {
+        query = query.where(eq(productsTable.categoryId, categoryId));
+      }
+      
+      // Сортировка
+      switch (sortBy) {
+        case 'newest':
+          query = query.orderBy(desc(productsTable.createdAt));
+          break;
+        case 'popular':
+          query = query.orderBy(desc(productsTable.createdAt));
+          break;
+        case 'availability':
+          query = query.orderBy(productsTable.name);
+          break;
+        default:
+          query = query.orderBy(desc(productsTable.createdAt));
+      }
+      
+      // Подсчет общего количества товаров с учетом фильтров
+      let countQuery = db.select({ count: count() }).from(productsTable);
+      
+      if (search && search.trim() !== '') {
+        try {
+          countQuery = countQuery.where(
+            sql`${productsTable.name} ILIKE ${'%' + search + '%'} OR ${productsTable.description} ILIKE ${'%' + search + '%'}`
+          );
+        } catch (error) {
+          console.error("Error applying search filter to count query:", error);
+        }
+      }
+      
+      if (categoryId) {
+        countQuery = countQuery.where(eq(productsTable.categoryId, categoryId));
+      }
+      
+      const countResult = await countQuery;
+      const totalProducts = Number(countResult[0].count);
+      const totalPages = Math.ceil(totalProducts / pageSize);
+      
+      console.log(`Count query found ${totalProducts} products`);
+      
+      // Применяем пагинацию
+      query = query.limit(pageSize).offset((page - 1) * pageSize);
+      
+      // Выполняем запрос
+      const productsResult = await query;
+      console.log(`Main query found ${productsResult.length} products`);
+      
+      if (productsResult.length === 0) {
+        return { products: [], totalProducts, totalPages };
+      }
+      
+      // Получаем список ID продуктов
+      const productIds = productsResult.map(p => p.id);
+      
+      // Получаем информацию о наличии в магазинах
+      const availabilityData = await db.select({
+        productId: productAvailabilityTable.productId,
+        storeId: productAvailabilityTable.storeId,
+        isAvailable: productAvailabilityTable.isAvailable,
+        storeName: storesTable.name,
+      })
+      .from(productAvailabilityTable)
+      .leftJoin(storesTable, eq(productAvailabilityTable.storeId, storesTable.id))
+      .where(
+        productIds.length > 0 
+          ? sql`${productAvailabilityTable.productId} IN (${sql.join(productIds.map(id => sql`${id}`), sql`, `)})`
+          : sql`1=0` // Никогда не выполнится, если список ID пуст
+      )
+      .orderBy(productAvailabilityTable.storeId);
+      
+      // Группируем информацию о наличии по продуктам
+      const availabilityByProduct: Record<number, Array<{
+        storeId: number;
+        storeName: string;
+        isAvailable: boolean;
+      }>> = {};
+      
+      for (const item of availabilityData) {
+        if (!availabilityByProduct[item.productId]) {
+          availabilityByProduct[item.productId] = [];
+        }
+        
+        availabilityByProduct[item.productId].push({
+          storeId: item.storeId,
+          storeName: item.storeName || '',
+          isAvailable: item.isAvailable,
+        });
+      }
+      
+      // Формируем финальный список продуктов с информацией о наличии
+      let productsWithAvailability = productsResult.map(product => ({
+        ...product,
+        availability: availabilityByProduct[product.id] || [],
+      }));
+      
+      // Применяем фильтр по магазинам, если указан
+      if (storeId.length > 0) {
+        productsWithAvailability = productsWithAvailability.filter(product => 
+          product.availability.some(a => storeId.includes(a.storeId))
+        );
+      }
+      
+      // Применяем фильтр по наличию, если указан
+      if (inStock) {
+        productsWithAvailability = productsWithAvailability.filter(product => 
+          product.availability.some(a => a.isAvailable)
+        );
+      }
+      
+      // Применяем фильтр по тегам, если указан
+      if (tags.length > 0) {
+        productsWithAvailability = productsWithAvailability.filter(product => 
+          tags.some(tag => product.tags.includes(tag))
+        );
+      }
+      
+      console.log(`Final result: ${productsWithAvailability.length} products`);
+      
+      return {
+        products: productsWithAvailability,
+        totalProducts,
+        totalPages,
+      };
+    } catch (error) {
+      console.error("Error in getProducts:", error);
+      return {
+        products: [],
+        totalProducts: 0,
+        totalPages: 0,
+      };
     }
-    
-    // Filter by store and availability if needed
-    let products = productsResult.map(product => ({
-      ...product,
-      availability: availabilityByProduct[product.id] || [],
-    }));
-    
-    // Apply store filter if specified
-    if (storeId.length > 0) {
-      products = products.filter(product => 
-        product.availability.some(a => storeId.includes(a.storeId))
-      );
-    }
-    
-    // Apply in-stock filter if specified
-    if (inStock) {
-      products = products.filter(product => 
-        product.availability.some(a => a.isAvailable)
-      );
-    }
-    
-    // Apply tags filter if specified
-    if (tags.length > 0) {
-      products = products.filter(product => 
-        tags.some(tag => product.tags.includes(tag))
-      );
-    }
-    
-    return {
-      products,
-      totalProducts,
-      totalPages,
-    };
   }
   
   async getProductById(id: number): Promise<Product | undefined> {
