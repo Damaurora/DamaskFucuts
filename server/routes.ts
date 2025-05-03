@@ -41,6 +41,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Products routes
   app.get(`${apiPrefix}/products`, async (req, res) => {
     try {
+      console.log("GET /api/products request with query:", req.query);
+      
       const { 
         search, 
         categoryId, 
@@ -52,6 +54,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
         sortBy 
       } = req.query;
       
+      // Log parsed search parameter
+      if (search) {
+        console.log(`Search parameter: "${search}" (${typeof search})`);
+      }
+      
       // Handle multiple storeId and tag values
       const storeIds = Array.isArray(storeId) 
         ? storeId.map(id => parseInt(id as string, 10)).filter(id => !isNaN(id))
@@ -59,8 +66,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
       const tags = Array.isArray(tag) ? tag as string[] : tag ? [tag as string] : [];
       
-      const result = await storage.getProducts({
-        search: search as string,
+      // Prepare parameters
+      const params = {
+        search: typeof search === 'string' ? search : undefined,
         categoryId: categoryId ? parseInt(categoryId as string, 10) : undefined,
         inStock: inStock === 'true',
         storeId: storeIds,
@@ -68,12 +76,17 @@ export async function registerRoutes(app: Express): Promise<Server> {
         page: page ? parseInt(page as string, 10) : 1,
         pageSize: pageSize ? parseInt(pageSize as string, 10) : 9,
         sortBy: sortBy as string,
-      });
+      };
       
+      console.log("Calling storage.getProducts with params:", JSON.stringify(params));
+      
+      const result = await storage.getProducts(params);
+      
+      console.log(`Products found: ${result.products.length}, total: ${result.totalProducts}, pages: ${result.totalPages}`);
       res.json(result);
     } catch (error) {
       console.error("Error fetching products:", error);
-      res.status(500).json({ message: "Ошибка при получении товаров" });
+      res.status(500).json({ message: "Ошибка при получении товаров", error: error instanceof Error ? error.message : String(error) });
     }
   });
   

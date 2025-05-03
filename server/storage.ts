@@ -217,7 +217,12 @@ export class DatabaseStorage implements IStorage {
     
     // Apply filters
     if (search) {
-      query = query.where(like(products.name, `%${search}%`));
+      try {
+        console.log(`Applying search filter: "${search}"`);
+        query = query.where(sql`${products.name} ILIKE ${'%' + search + '%'} OR ${products.description} ILIKE ${'%' + search + '%'}`);
+      } catch (error) {
+        console.error("Error applying search filter:", error);
+      }
     }
     
     if (categoryId) {
@@ -241,8 +246,23 @@ export class DatabaseStorage implements IStorage {
         query = query.orderBy(desc(products.createdAt));
     }
     
-    // Get total count for pagination
-    const countResult = await db.select({ count: count() }).from(products);
+    // Get total count for pagination with filters applied
+    let countQuery = db.select({ count: count() }).from(products);
+    
+    // Apply the same filters to the count query
+    if (search) {
+      try {
+        countQuery = countQuery.where(sql`${products.name} ILIKE ${'%' + search + '%'} OR ${products.description} ILIKE ${'%' + search + '%'}`);
+      } catch (error) {
+        console.error("Error applying search filter to count query:", error);
+      }
+    }
+    
+    if (categoryId) {
+      countQuery = countQuery.where(eq(products.categoryId, categoryId));
+    }
+    
+    const countResult = await countQuery;
     const totalProducts = Number(countResult[0].count);
     const totalPages = Math.ceil(totalProducts / pageSize);
     
