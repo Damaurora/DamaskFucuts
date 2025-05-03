@@ -205,25 +205,52 @@ const HomePage = () => {
       </section>
       
       {/* Store Locations */}
-      <section className="py-8 md:py-12 bg-background">
+      <section className="py-8 md:py-12 bg-gradient-to-b from-background to-card/20">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="font-unbounded text-xl md:text-3xl">Наши магазины</h2>
-            <Link href="/stores" className="text-sm text-primary hover:underline">Все магазины</Link>
+            <div>
+              <h2 className="font-unbounded text-xl md:text-3xl">Наши магазины</h2>
+              <p className="text-muted-foreground text-sm mt-1 md:mt-2">Ближайший магазин всегда рядом с вами</p>
+            </div>
+            <Link href="/stores" className="text-sm text-primary hover:underline font-medium flex items-center">
+              Все магазины
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </Link>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
-            {stores?.map((store, index) => (
-              index < 2 && <StoreCard key={store.id} store={store} />
-            ))}
+          <div className="relative">
+            {/* Декоративный фон */}
+            <div className="absolute inset-0 -mx-4 md:mx-0 -z-10">
+              <div className="w-full h-full opacity-5 overflow-hidden">
+                <img 
+                  src="https://images.unsplash.com/photo-1579739361584-2abdea4275a4?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=1000&w=2000&q=80" 
+                  alt="" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-r from-background via-transparent to-background"></div>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 relative">
+              {stores?.map((store, index) => (
+                index < 2 && <StoreCard key={store.id} store={store} />
+              ))}
+            </div>
           </div>
           
-          {/* Mobile-only button for stores page */}
+          {/* Кнопка на всю ширину для десктопа */}
           {stores && stores.length > 2 && (
-            <div className="mt-6 text-center md:hidden">
+            <div className="mt-8 text-center">
               <Link href="/stores">
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full md:w-auto md:px-12">
                   Все магазины ({stores.length})
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-2">
+                    <path d="M5 12h14"></path>
+                    <path d="m12 5 7 7-7 7"></path>
+                  </svg>
                 </Button>
               </Link>
             </div>
