@@ -8,42 +8,41 @@ interface StoreCardProps {
 const StoreCard = ({ store }: StoreCardProps) => {
   return (
     <div className="bg-card rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow">
-      {/* Mobile layout - Horizontal card */}
-      <div className="md:hidden flex">
-        <div className="w-1/3 bg-secondary flex items-center justify-center">
-          <MapPin className="h-8 w-8 text-primary" />
-        </div>
-        <div className="w-2/3 p-4">
-          <h3 className="font-unbounded text-base mb-2 truncate">{store.name}</h3>
+      {/* Mobile layout - Card with prominent address */}
+      <div className="md:hidden">
+        <div className="p-4">
+          <h3 className="font-unbounded text-base mb-3">{store.name}</h3>
           
-          <div className="space-y-1 text-muted-foreground text-sm">
-            <div className="flex items-center">
-              <MapPin className="h-3 w-3 text-primary mr-2 flex-shrink-0" />
-              <p className="truncate">{store.address}</p>
+          {/* Address box with highlight */}
+          <div className="bg-secondary/70 p-3 rounded-md mb-3">
+            <div className="flex items-start">
+              <MapPin className="h-4 w-4 text-primary mr-2 mt-0.5 flex-shrink-0" />
+              <p className="text-foreground font-medium text-sm">{store.address}</p>
             </div>
-            <div className="flex items-center">
-              <Phone className="h-3 w-3 text-primary mr-2 flex-shrink-0" />
-              <p className="truncate">{store.phone}</p>
-            </div>
-            
-            <div className="flex space-x-2 pt-2">
-              <a 
-                href={`tel:${store.phone.replace(/[^0-9+]/g, '')}`}
-                className="text-xs bg-secondary text-foreground py-1 px-2 rounded-md flex items-center"
-              >
-                <Phone className="h-3 w-3 mr-1" />
-                Позвонить
-              </a>
-              <a 
-                href={`https://maps.google.com/?q=${encodeURIComponent(store.address)}`}
-                target="_blank"
-                rel="noopener noreferrer" 
-                className="text-xs bg-primary/10 text-primary py-1 px-2 rounded-md flex items-center"
-              >
-                <MapPin className="h-3 w-3 mr-1" />
-                Маршрут
-              </a>
-            </div>
+          </div>
+          
+          <div className="flex items-center mb-3">
+            <Phone className="h-4 w-4 text-primary mr-2 flex-shrink-0" />
+            <p className="text-muted-foreground text-sm">{store.phone}</p>
+          </div>
+          
+          <div className="flex space-x-2 pt-1">
+            <a 
+              href={`tel:${store.phone.replace(/[^0-9+]/g, '')}`}
+              className="text-xs bg-secondary text-foreground py-1.5 px-3 rounded-md flex items-center flex-1 justify-center"
+            >
+              <Phone className="h-3 w-3 mr-1" />
+              Позвонить
+            </a>
+            <a 
+              href={`https://maps.google.com/?q=${encodeURIComponent(store.address)}`}
+              target="_blank"
+              rel="noopener noreferrer" 
+              className="text-xs bg-primary/10 text-primary py-1.5 px-3 rounded-md flex items-center flex-1 justify-center"
+            >
+              <MapPin className="h-3 w-3 mr-1" />
+              Маршрут
+            </a>
           </div>
         </div>
       </div>
@@ -62,11 +61,15 @@ const StoreCard = ({ store }: StoreCardProps) => {
         <div className="p-6">
           <h3 className="font-unbounded text-xl mb-4">{store.name}</h3>
           
-          <div className="space-y-3 text-muted-foreground">
+          {/* Address with highlight */}
+          <div className="bg-secondary/70 p-3 rounded-md mb-4">
             <div className="flex items-start">
-              <MapPin className="h-5 w-5 text-primary mr-3 mt-1" />
-              <p>{store.address}</p>
+              <MapPin className="h-5 w-5 text-primary mr-3 mt-0.5 flex-shrink-0" />
+              <p className="text-foreground font-medium">{store.address}</p>
             </div>
+          </div>
+          
+          <div className="space-y-3 text-muted-foreground">
             <div className="flex items-start">
               <Clock className="h-5 w-5 text-primary mr-3 mt-1" />
               <div>
