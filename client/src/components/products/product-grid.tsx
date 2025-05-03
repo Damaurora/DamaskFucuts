@@ -38,13 +38,14 @@ const ProductGrid = ({ categoryId, searchQuery, filters }: ProductGridProps) => 
   queryParams.append('page', page.toString());
   queryParams.append('pageSize', pageSize.toString());
   
-  const { data, isLoading, isPreviousData, error } = useQuery<{
+  interface ProductsResponse {
     products: Product[];
     totalProducts: number;
     totalPages: number;
-  }>({ 
+  }
+  
+  const { data, isLoading, error } = useQuery<ProductsResponse>({ 
     queryKey: [`/api/products?${queryParams.toString()}`],
-    keepPreviousData: true,
     retry: false,
   });
   
@@ -126,7 +127,7 @@ const ProductGrid = ({ categoryId, searchQuery, filters }: ProductGridProps) => 
               ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" 
               : "space-y-4"
           }>
-            {data.products.map(product => (
+            {data.products.map((product: Product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
