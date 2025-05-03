@@ -15,10 +15,12 @@ import { ProtectedRoute } from "@/lib/protected-route";
 import MainLayout from "@/components/layout/main-layout";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
+import ScrollToTop from "@/components/utils/scroll-to-top";
 
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
+      <ScrollToTop />
       <Header />
       <main className="flex-grow">
         <Switch>

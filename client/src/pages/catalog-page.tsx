@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useLocation, useParams, Link } from 'wouter';
 import { Category } from '@shared/schema';
@@ -24,6 +24,11 @@ const CatalogPage = () => {
   
   // State for filter drawer
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  
+  // Ручной скролл наверх при изменении категории
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [categorySlug]);
   
   // Get search query from URL if present
   const searchParams = new URLSearchParams(location.split('?')[1] || '');
