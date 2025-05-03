@@ -126,7 +126,7 @@ const Header = () => {
               <div className="pt-3 border-t border-border">
                 <div className="flex flex-col space-y-2 text-sm text-muted-foreground">
                   <Link href="/about" className="hover:text-primary transition-all">О нас</Link>
-                  <Link href="/delivery" className="hover:text-primary transition-all">Доставка и оплата</Link>
+                  <Link href="/payment" className="hover:text-primary transition-all">Оплата</Link>
                   <Link href="/contacts" className="hover:text-primary transition-all">Контакты</Link>
                 </div>
               </div>
