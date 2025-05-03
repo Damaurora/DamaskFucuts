@@ -10,9 +10,8 @@ const Footer = () => {
           <div className="space-y-4">
             {/* Logo and social media for mobile */}
             <div className="pb-4">
-              <Link href="/" className="flex items-center space-x-2 mb-4">
-                <span className="text-primary font-unbounded font-bold text-xl">DAMASK</span>
-                <span className="text-foreground font-unbounded text-lg">SHOP</span>
+              <Link href="/" className="flex items-center mb-4">
+                <span className="text-primary font-unbounded font-bold text-xl">DAMASK SHOP</span>
               </Link>
               <p className="text-muted-foreground text-sm">Магазин вейп продукции в Самаре. Широкий ассортимент, гарантия качества.</p>
               <div className="flex space-x-4 mt-4">
@@ -92,9 +91,8 @@ const Footer = () => {
         {/* Desktop footer */}
         <div className="hidden md:grid md:grid-cols-4 gap-8">
           <div>
-            <Link href="/" className="flex items-center space-x-2 mb-4">
-              <span className="text-primary font-unbounded font-bold text-2xl">DAMASK</span>
-              <span className="text-foreground font-unbounded text-xl">SHOP</span>
+            <Link href="/" className="flex items-center mb-4">
+              <span className="text-primary font-unbounded font-bold text-2xl">DAMASK SHOP</span>
             </Link>
             <p className="text-muted-foreground">Магазин вейп продукции в Самаре. Широкий ассортимент, гарантия качества.</p>
             <div className="flex space-x-4 mt-4">
