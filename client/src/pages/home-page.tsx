@@ -29,21 +29,83 @@ const HomePage = () => {
         </div>
       </section>
       
-      {/* Mobile Quick Categories */}
-      <section className="py-6 bg-background md:hidden">
+      {/* Categories Grid */}
+      <section className="py-6 bg-background">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-3 gap-3">
-            <Link href="/catalog/pods" className="flex flex-col items-center p-3 bg-secondary rounded-lg hover:bg-primary/10 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mb-2 text-primary"><path d="M18.178 2.337a3 3 0 0 0-4.242 0l-8.48 8.482a6 6 0 0 0 8.485 8.485l8.486-8.485"></path><path d="M8.75 13.4 5.9 16.244a1 1 0 0 0 0 1.414l.342.342a1 1 0 0 0 1.414 0l2.83-2.83"></path></svg>
-              <span className="text-xs">Поды</span>
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-unbounded text-xl md:text-3xl">Категории</h2>
+            <Link href="/catalog" className="text-sm text-primary hover:underline">Все категории</Link>
+          </div>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+            <Link href="/catalog/pods" className="category-tile flex flex-col overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all">
+              <div className="h-24 md:h-32 bg-gradient-to-br from-primary/10 to-primary/40 relative flex items-center justify-center">
+                <img 
+                  src="https://images.unsplash.com/photo-1562576661-c92d55da39f5?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300" 
+                  alt="Поды" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply"
+                />
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M18.178 2.337a3 3 0 0 0-4.242 0l-8.48 8.482a6 6 0 0 0 8.485 8.485l8.486-8.485"></path><path d="M8.75 13.4 5.9 16.244a1 1 0 0 0 0 1.414l.342.342a1 1 0 0 0 1.414 0l2.83-2.83"></path></svg>
+              </div>
+              <div className="p-2 bg-card">
+                <span className="text-sm font-medium">Поды</span>
+              </div>
             </Link>
-            <Link href="/catalog/liquids" className="flex flex-col items-center p-3 bg-secondary rounded-lg hover:bg-primary/10 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mb-2 text-primary"><path d="M8.67 2h6.66c.67 0 1.34.34 1.34 1.34C16.67 4.67 15.67 6 14 6h-4c-1.67 0-2.67-1.33-2.67-2.66C7.33 2.34 8 2 8.67 2Z"></path><path d="M4 15c0-5 2-9 8-9s8 4 8 9v1c0 3-1 5-4 5h-8c-3 0-4-2-4-5v-1Z"></path><path d="M4 15h16"></path></svg>
-              <span className="text-xs">Жидкости</span>
+            
+            <Link href="/catalog/liquids" className="category-tile flex flex-col overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all">
+              <div className="h-24 md:h-32 bg-gradient-to-br from-blue-500/10 to-blue-500/40 relative flex items-center justify-center">
+                <img 
+                  src="https://images.unsplash.com/photo-1558452919-d8a1c7d91d0f?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300" 
+                  alt="Жидкости" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply"
+                />
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M8.67 2h6.66c.67 0 1.34.34 1.34 1.34C16.67 4.67 15.67 6 14 6h-4c-1.67 0-2.67-1.33-2.67-2.66C7.33 2.34 8 2 8.67 2Z"></path><path d="M4 15c0-5 2-9 8-9s8 4 8 9v1c0 3-1 5-4 5h-8c-3 0-4-2-4-5v-1Z"></path><path d="M4 15h16"></path></svg>
+              </div>
+              <div className="p-2 bg-card">
+                <span className="text-sm font-medium">Жидкости</span>
+              </div>
             </Link>
-            <Link href="/catalog/disposables" className="flex flex-col items-center p-3 bg-secondary rounded-lg hover:bg-primary/10 transition-colors">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mb-2 text-primary"><path d="M6 2v20l12-10Z"></path></svg>
-              <span className="text-xs">Одноразки</span>
+            
+            <Link href="/catalog/disposables" className="category-tile flex flex-col overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all">
+              <div className="h-24 md:h-32 bg-gradient-to-br from-purple-500/10 to-purple-500/40 relative flex items-center justify-center">
+                <img 
+                  src="https://images.unsplash.com/photo-1541418950054-c12804e149d9?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300" 
+                  alt="Одноразовые устройства" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply"
+                />
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M6 2v20l12-10Z"></path></svg>
+              </div>
+              <div className="p-2 bg-card">
+                <span className="text-sm font-medium">Одноразки</span>
+              </div>
+            </Link>
+            
+            <Link href="/catalog/hookahs" className="category-tile flex flex-col overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all">
+              <div className="h-24 md:h-32 bg-gradient-to-br from-green-500/10 to-green-500/40 relative flex items-center justify-center">
+                <img 
+                  src="https://images.unsplash.com/photo-1578670407805-f4682dbe74f9?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300" 
+                  alt="Кальяны" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply"
+                />
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M4 8h9a3 3 0 0 0 3-3 1 1 0 0 0-1-1h-3"></path><path d="M4 8h5a3 3 0 0 1 3 3 1 1 0 0 1-1 1h-3"></path><path d="M4 16h9a3 3 0 0 0 3-3 1 1 0 0 0-1-1h-3"></path><path d="M8 21l2 -14"></path></svg>
+              </div>
+              <div className="p-2 bg-card">
+                <span className="text-sm font-medium">Кальяны</span>
+              </div>
+            </Link>
+            
+            <Link href="/catalog/tobacco" className="category-tile flex flex-col overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all">
+              <div className="h-24 md:h-32 bg-gradient-to-br from-amber-500/10 to-amber-500/40 relative flex items-center justify-center">
+                <img 
+                  src="https://images.unsplash.com/photo-1519420573924-65fcd9954486?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300" 
+                  alt="Табак" 
+                  className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply"
+                />
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M2 20h18a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H2"></path><path d="M2 4h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2"></path><path d="M2 4v16"></path></svg>
+              </div>
+              <div className="p-2 bg-card">
+                <span className="text-sm font-medium">Табак</span>
+              </div>
             </Link>
           </div>
         </div>
