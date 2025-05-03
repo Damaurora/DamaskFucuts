@@ -83,3 +83,16 @@
     @apply bg-gradient-to-br from-primary to-orange-500;
   }
 }
+
+@layer utilities {
+  /* Скрываем скроллбар для всех браузеров */
+  .scrollbar-hide {
+    -ms-overflow-style: none;  /* IE и Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  
+  /* Скрываем скроллбар для WebKit браузеров (Chrome, Safari, etc.) */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}

@@ -1,6 +1,6 @@
 import { Link } from 'wouter';
 import { Button } from '@/components/ui/button';
-import Carousel from '@/components/home/carousel';
+import NewsBanner from '@/components/home/news-banner';
 import ProductGrid from '@/components/products/product-grid';
 import StoreCard from '@/components/home/store-card';
 import { useQuery } from '@tanstack/react-query';
@@ -17,17 +17,26 @@ const HomePage = () => {
   
   return (
     <div>
-      {/* News & Promotions Hero Carousel */}
+      {/* News & Promotions Banner */}
       <section className="pt-8 pb-4 md:py-12 bg-gradient-to-b from-background to-card/30 relative">
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-unbounded text-xl md:text-3xl">Новости и акции</h2>
-            <Link href="/news" className="text-sm text-primary hover:underline">Все новости</Link>
+            <div>
+              <h2 className="font-unbounded text-xl md:text-3xl">Новости и акции</h2>
+              <p className="text-muted-foreground text-sm mt-1">Потяните влево или вправо, чтобы просмотреть все новости</p>
+            </div>
+            <Link href="/news" className="text-sm text-primary hover:underline flex items-center">
+              Все новости
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="ml-1">
+                <path d="M5 12h14"></path>
+                <path d="m12 5 7 7-7 7"></path>
+              </svg>
+            </Link>
           </div>
-          <Carousel />
+          <NewsBanner />
           
           {/* Quick Call-to-Action */}
-          <div className="mt-6 flex justify-center">
+          <div className="mt-8 flex justify-center">
             <Link href="/catalog">
               <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white font-medium">
                 Смотреть каталог
