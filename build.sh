@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Установка зависимостей
-npm install
+# Установка зависимостей, включая dev-зависимости для сборки
+npm install --include=dev
 
 # Сборка проекта
 npm run build
