@@ -49,12 +49,17 @@ const StoreCard = ({ store }: StoreCardProps) => {
       
       {/* Desktop layout - Vertical card with map */}
       <div className="hidden md:block">
-        <div className="h-64 relative">
-          {/* Map placeholder - would be replaced with actual map component in production */}
-          <div className="absolute inset-0 bg-secondary flex items-center justify-center">
-            <div className="text-center">
-              <MapPin className="h-10 w-10 mx-auto text-primary" />
-              <p className="text-muted-foreground mt-2">Интерактивная карта</p>
+        <div className="h-64 relative overflow-hidden">
+          {/* Изображение магазина */}
+          <img 
+            src={`https://images.unsplash.com/photo-1581269515786-2cbb82f4c9d9?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&h=400&w=600&q=80`} 
+            alt={store.name} 
+            className="absolute inset-0 w-full h-full object-cover transition-transform hover:scale-105 duration-500"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col items-center justify-end p-4">
+            <div className="bg-black/50 rounded-lg px-3 py-2 backdrop-blur-sm text-white text-center">
+              <p className="font-medium">Damask Shop</p>
+              <p className="text-xs">Фирменный магазин</p>
             </div>
           </div>
         </div>
