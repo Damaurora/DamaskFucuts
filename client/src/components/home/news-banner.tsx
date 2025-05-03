@@ -178,7 +178,7 @@ const NewsBanner = () => {
           {[...Array(3)].map((_, index) => (
             <div 
               key={index} 
-              className="min-w-[350px] md:min-w-[500px] flex-shrink-0 rounded-lg h-[420px] md:h-[520px] relative overflow-hidden"
+              className="min-w-[100%] sm:min-w-[350px] md:min-w-[500px] flex-shrink-0 rounded-lg h-[420px] md:h-[520px] relative overflow-hidden"
               style={{ 
                 animationDelay: `${index * 0.2}s`,
                 animation: 'pulse 2s cubic-bezier(.4,0,.6,1) infinite'
@@ -265,7 +265,7 @@ const NewsBanner = () => {
           {newsItems.map((item, index) => (
             <div 
               key={item.id} 
-              className={`relative min-w-[350px] md:min-w-[500px] flex-shrink-0 bg-card rounded-lg overflow-hidden border border-border/40 hover:shadow-lg transition-all duration-500 ${
+              className={`relative min-w-[100%] sm:min-w-[350px] md:min-w-[500px] flex-shrink-0 bg-card rounded-lg overflow-hidden border border-border/40 hover:shadow-lg transition-all duration-500 ${
                 activeItem === item.id ? 'ring-2 ring-primary' : ''
               }`}
               onMouseEnter={() => setActiveItem(item.id)}

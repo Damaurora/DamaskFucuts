@@ -16,11 +16,13 @@ import MainLayout from "@/components/layout/main-layout";
 import Header from "@/components/layout/header";
 import Footer from "@/components/layout/footer";
 import ScrollToTop from "@/components/utils/scroll-to-top";
+import AgeVerificationModal from "@/components/age-verification-modal";
 
 function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <ScrollToTop />
+      <AgeVerificationModal />
       <Header />
       <main className="flex-grow">
         <Switch>

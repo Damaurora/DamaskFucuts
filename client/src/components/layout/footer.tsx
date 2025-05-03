@@ -78,7 +78,6 @@ const Footer = () => {
                 <h4 className="text-sm font-semibold mb-3">Информация</h4>
                 <ul className="space-y-2 text-xs text-muted-foreground">
                   <li><Link href="/about" className="hover:text-primary transition-all">О нас</Link></li>
-                  <li><Link href="/delivery" className="hover:text-primary transition-all">Доставка</Link></li>
                   <li><Link href="/payment" className="hover:text-primary transition-all">Оплата</Link></li>
                   <li><Link href="/contacts" className="hover:text-primary transition-all">Контакты</Link></li>
                   <li><Link href="/vacancies" className="hover:text-primary transition-all">Вакансии</Link></li>
@@ -122,7 +121,6 @@ const Footer = () => {
             <h4 className="text-lg font-unbounded mb-4">Информация</h4>
             <ul className="space-y-2 text-muted-foreground">
               <li><Link href="/about" className="hover:text-primary transition-all">О нас</Link></li>
-              <li><Link href="/delivery" className="hover:text-primary transition-all">Доставка</Link></li>
               <li><Link href="/payment" className="hover:text-primary transition-all">Оплата</Link></li>
               <li><Link href="/contacts" className="hover:text-primary transition-all">Контакты</Link></li>
               <li><Link href="/vacancies" className="hover:text-primary transition-all">Вакансии</Link></li>
