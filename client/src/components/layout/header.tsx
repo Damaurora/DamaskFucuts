@@ -33,9 +33,8 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <span className="text-primary font-unbounded font-bold text-2xl">DAMASK</span>
-            <span className="text-foreground font-unbounded text-xl">SHOP</span>
+          <Link href="/" className="flex items-center">
+            <span className="text-primary font-unbounded font-bold text-2xl">DAMASK SHOP</span>
           </Link>
           
           {/* Desktop Navigation */}

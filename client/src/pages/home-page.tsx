@@ -4,11 +4,15 @@ import Carousel from '@/components/home/carousel';
 import ProductGrid from '@/components/products/product-grid';
 import StoreCard from '@/components/home/store-card';
 import { useQuery } from '@tanstack/react-query';
-import { Store } from '@shared/schema';
+import { Store, Category } from '@shared/schema';
 
 const HomePage = () => {
   const { data: stores } = useQuery<Store[]>({ 
     queryKey: ['/api/stores']
+  });
+  
+  const { data: categories } = useQuery<Category[]>({ 
+    queryKey: ['/api/categories']
   });
   
   return (
@@ -23,11 +27,7 @@ const HomePage = () => {
           <Carousel />
           
           {/* Quick Call-to-Action */}
-          <div className="mt-6 flex flex-col sm:flex-row items-center justify-center sm:justify-between gap-4 bg-card p-4 md:p-6 rounded-lg shadow-sm">
-            <div>
-              <h3 className="text-xl md:text-2xl font-unbounded mb-1">DAMASK SHOP</h3>
-              <p className="text-muted-foreground">Магазин вейп продукции в Самаре</p>
-            </div>
+          <div className="mt-6 flex justify-center">
             <Link href="/catalog">
               <Button size="lg" className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white font-medium">
                 Смотреть каталог
@@ -46,75 +46,86 @@ const HomePage = () => {
           </div>
           
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-            <Link href="/catalog/pods" className="category-tile flex flex-col overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all">
-              <div className="h-24 md:h-32 bg-gradient-to-br from-primary/10 to-primary/40 relative flex items-center justify-center">
+            {/* Всегда показывать опцию "Все товары" */}
+            <Link href="/catalog" className="category-tile flex flex-col overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all">
+              <div className="h-24 md:h-32 bg-gradient-to-br from-slate-500/10 to-slate-500/30 relative flex items-center justify-center">
                 <img 
-                  src="https://images.unsplash.com/photo-1562576661-c92d55da39f5?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300" 
-                  alt="Поды" 
+                  src="https://images.unsplash.com/photo-1603302576837-37561b2e2302?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300" 
+                  alt="Все товары" 
                   className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply"
                 />
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M18.178 2.337a3 3 0 0 0-4.242 0l-8.48 8.482a6 6 0 0 0 8.485 8.485l8.486-8.485"></path><path d="M8.75 13.4 5.9 16.244a1 1 0 0 0 0 1.414l.342.342a1 1 0 0 0 1.414 0l2.83-2.83"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
               </div>
               <div className="p-2 bg-card">
-                <span className="text-sm font-medium">Поды</span>
+                <span className="text-sm font-medium">Все товары</span>
               </div>
             </Link>
             
-            <Link href="/catalog/liquids" className="category-tile flex flex-col overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all">
-              <div className="h-24 md:h-32 bg-gradient-to-br from-blue-500/10 to-blue-500/40 relative flex items-center justify-center">
-                <img 
-                  src="https://images.unsplash.com/photo-1558452919-d8a1c7d91d0f?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300" 
-                  alt="Жидкости" 
-                  className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply"
-                />
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M8.67 2h6.66c.67 0 1.34.34 1.34 1.34C16.67 4.67 15.67 6 14 6h-4c-1.67 0-2.67-1.33-2.67-2.66C7.33 2.34 8 2 8.67 2Z"></path><path d="M4 15c0-5 2-9 8-9s8 4 8 9v1c0 3-1 5-4 5h-8c-3 0-4-2-4-5v-1Z"></path><path d="M4 15h16"></path></svg>
-              </div>
-              <div className="p-2 bg-card">
-                <span className="text-sm font-medium">Жидкости</span>
-              </div>
-            </Link>
-            
-            <Link href="/catalog/disposables" className="category-tile flex flex-col overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all">
-              <div className="h-24 md:h-32 bg-gradient-to-br from-purple-500/10 to-purple-500/40 relative flex items-center justify-center">
-                <img 
-                  src="https://images.unsplash.com/photo-1541418950054-c12804e149d9?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300" 
-                  alt="Одноразовые устройства" 
-                  className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply"
-                />
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M6 2v20l12-10Z"></path></svg>
-              </div>
-              <div className="p-2 bg-card">
-                <span className="text-sm font-medium">Одноразки</span>
-              </div>
-            </Link>
-            
-            <Link href="/catalog/hookahs" className="category-tile flex flex-col overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all">
-              <div className="h-24 md:h-32 bg-gradient-to-br from-green-500/10 to-green-500/40 relative flex items-center justify-center">
-                <img 
-                  src="https://images.unsplash.com/photo-1578670407805-f4682dbe74f9?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300" 
-                  alt="Кальяны" 
-                  className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply"
-                />
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M4 8h9a3 3 0 0 0 3-3 1 1 0 0 0-1-1h-3"></path><path d="M4 8h5a3 3 0 0 1 3 3 1 1 0 0 1-1 1h-3"></path><path d="M4 16h9a3 3 0 0 0 3-3 1 1 0 0 0-1-1h-3"></path><path d="M8 21l2 -14"></path></svg>
-              </div>
-              <div className="p-2 bg-card">
-                <span className="text-sm font-medium">Кальяны</span>
-              </div>
-            </Link>
-            
-            <Link href="/catalog/tobacco" className="category-tile flex flex-col overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all">
-              <div className="h-24 md:h-32 bg-gradient-to-br from-amber-500/10 to-amber-500/40 relative flex items-center justify-center">
-                <img 
-                  src="https://images.unsplash.com/photo-1519420573924-65fcd9954486?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300" 
-                  alt="Табак" 
-                  className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply"
-                />
-                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M2 20h18a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H2"></path><path d="M2 4h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2"></path><path d="M2 4v16"></path></svg>
-              </div>
-              <div className="p-2 bg-card">
-                <span className="text-sm font-medium">Табак</span>
-              </div>
-            </Link>
+            {/* Динамическое отображение всех категорий */}
+            {categories?.map((category) => {
+              // Функция для определения цвета и изображения по слагу категории
+              const getCategoryAssets = (slug: string) => {
+                const assets: {[key: string]: {icon: JSX.Element, bg: string, imgUrl: string}} = {
+                  // Предустановленные ассеты для известных категорий
+                  'pods': {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M18.178 2.337a3 3 0 0 0-4.242 0l-8.48 8.482a6 6 0 0 0 8.485 8.485l8.486-8.485"></path><path d="M8.75 13.4 5.9 16.244a1 1 0 0 0 0 1.414l.342.342a1 1 0 0 0 1.414 0l2.83-2.83"></path></svg>,
+                    bg: 'from-primary/10 to-primary/40',
+                    imgUrl: 'https://images.unsplash.com/photo-1562576661-c92d55da39f5?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300'
+                  },
+                  'liquids': {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M8.67 2h6.66c.67 0 1.34.34 1.34 1.34C16.67 4.67 15.67 6 14 6h-4c-1.67 0-2.67-1.33-2.67-2.66C7.33 2.34 8 2 8.67 2Z"></path><path d="M4 15c0-5 2-9 8-9s8 4 8 9v1c0 3-1 5-4 5h-8c-3 0-4-2-4-5v-1Z"></path><path d="M4 15h16"></path></svg>,
+                    bg: 'from-blue-500/10 to-blue-500/40',
+                    imgUrl: 'https://images.unsplash.com/photo-1558452919-d8a1c7d91d0f?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300'
+                  },
+                  'disposables': {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M6 2v20l12-10Z"></path></svg>,
+                    bg: 'from-purple-500/10 to-purple-500/40',
+                    imgUrl: 'https://images.unsplash.com/photo-1541418950054-c12804e149d9?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300'
+                  },
+                  'hookahs': {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M4 8h9a3 3 0 0 0 3-3 1 1 0 0 0-1-1h-3"></path><path d="M4 8h5a3 3 0 0 1 3 3 1 1 0 0 1-1 1h-3"></path><path d="M4 16h9a3 3 0 0 0 3-3 1 1 0 0 0-1-1h-3"></path><path d="M8 21l2 -14"></path></svg>,
+                    bg: 'from-green-500/10 to-green-500/40',
+                    imgUrl: 'https://images.unsplash.com/photo-1578670407805-f4682dbe74f9?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300'
+                  },
+                  'tobacco': {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M2 20h18a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H2"></path><path d="M2 4h10a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H2"></path><path d="M2 4v16"></path></svg>,
+                    bg: 'from-amber-500/10 to-amber-500/40',
+                    imgUrl: 'https://images.unsplash.com/photo-1519420573924-65fcd9954486?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300'
+                  },
+                  // Дефолтные ассеты, если категория не соответствует известным
+                  'default': {
+                    icon: <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="relative z-10 text-white drop-shadow-md"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
+                    bg: 'from-indigo-500/10 to-indigo-500/40',
+                    imgUrl: 'https://images.unsplash.com/photo-1607453998774-d533f65dac99?crop=entropy&cs=tinysrgb&fit=crop&fm=jpg&q=80&w=400&h=300'
+                  }
+                };
+                
+                return assets[slug] || assets['default'];
+              };
+              
+              const { icon, bg, imgUrl } = getCategoryAssets(category.slug);
+              
+              return (
+                <Link 
+                  key={category.id} 
+                  href={`/catalog/${category.slug}`} 
+                  className="category-tile flex flex-col overflow-hidden rounded-lg shadow-sm hover:shadow-md transition-all"
+                >
+                  <div className={`h-24 md:h-32 bg-gradient-to-br ${bg} relative flex items-center justify-center`}>
+                    <img 
+                      src={imgUrl} 
+                      alt={category.name} 
+                      className="absolute inset-0 w-full h-full object-cover opacity-60 mix-blend-multiply"
+                      loading="lazy"
+                    />
+                    {icon}
+                  </div>
+                  <div className="p-2 bg-card">
+                    <span className="text-sm font-medium">{category.name}</span>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </section>
