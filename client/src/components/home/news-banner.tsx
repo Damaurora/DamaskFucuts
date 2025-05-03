@@ -63,7 +63,7 @@ const NewsBanner = () => {
         } else {
           // Иначе прокручиваем на ширину одного элемента
           scrollRef.current.scrollBy({
-            left: 320, // Примерная ширина элемента
+            left: 370, // Примерная ширина элемента
             behavior: 'smooth'
           });
         }
@@ -174,23 +174,35 @@ const NewsBanner = () => {
   if (isLoading) {
     return (
       <div className="relative w-full overflow-hidden bg-gradient-to-r from-card/50 to-secondary/10 rounded-lg">
-        <div className="flex gap-6 py-6 px-4 animate-pulse overflow-hidden">
+        <div className="flex gap-6 py-6 px-4 md:px-8 animate-pulse overflow-hidden min-h-[400px] md:min-h-[520px]">
           {[...Array(3)].map((_, index) => (
             <div 
               key={index} 
-              className="min-w-[300px] md:min-w-[400px] flex-shrink-0 rounded-lg h-[360px] relative overflow-hidden"
+              className="min-w-[350px] md:min-w-[500px] flex-shrink-0 rounded-lg h-[420px] md:h-[520px] relative overflow-hidden"
               style={{ 
                 animationDelay: `${index * 0.2}s`,
                 animation: 'pulse 2s cubic-bezier(.4,0,.6,1) infinite'
               }}
             >
-              <div className="h-[200px] w-full bg-secondary/40 rounded-t-lg"></div>
-              <div className="p-4 space-y-3">
-                <div className="h-6 bg-secondary/40 rounded w-1/3"></div>
-                <div className="h-5 bg-secondary/30 rounded w-full"></div>
-                <div className="h-5 bg-secondary/30 rounded w-5/6"></div>
-                <div className="h-5 bg-secondary/30 rounded w-3/4"></div>
-                <div className="h-4 bg-secondary/40 rounded w-1/4 mt-6"></div>
+              <div className="h-[240px] md:h-[320px] w-full bg-secondary/40 rounded-t-lg relative overflow-hidden">
+                <div className="absolute inset-0 animate-shimmer"></div>
+              </div>
+              <div className="p-4 md:p-8 space-y-4">
+                <div className="h-7 md:h-8 bg-secondary/40 rounded w-2/3 relative overflow-hidden">
+                  <div className="absolute inset-0 animate-shimmer"></div>
+                </div>
+                <div className="h-5 md:h-6 bg-secondary/30 rounded w-full relative overflow-hidden">
+                  <div className="absolute inset-0 animate-shimmer"></div>
+                </div>
+                <div className="h-5 md:h-6 bg-secondary/30 rounded w-11/12 relative overflow-hidden">
+                  <div className="absolute inset-0 animate-shimmer"></div>
+                </div>
+                <div className="h-5 md:h-6 bg-secondary/30 rounded w-4/5 relative overflow-hidden">
+                  <div className="absolute inset-0 animate-shimmer"></div>
+                </div>
+                <div className="h-4 md:h-5 bg-secondary/40 rounded w-1/4 mt-6 relative overflow-hidden">
+                  <div className="absolute inset-0 animate-shimmer"></div>
+                </div>
               </div>
             </div>
           ))}
@@ -220,11 +232,11 @@ const NewsBanner = () => {
         {newsItems.map((_, index) => (
           <div 
             key={index}
-            className={`h-1 rounded-full transition-all duration-300 ${
+            className={`h-1.5 rounded-full transition-all duration-300 ${
               scrollRef.current && 
-              index * 320 <= scrollRef.current.scrollLeft && 
-              (index + 1) * 320 > scrollRef.current.scrollLeft
-                ? 'w-6 bg-primary' 
+              index * 370 <= scrollRef.current.scrollLeft && 
+              (index + 1) * 370 > scrollRef.current.scrollLeft
+                ? 'w-8 bg-primary' 
                 : 'w-2 bg-secondary/50'
             }`}
           />
@@ -249,11 +261,11 @@ const NewsBanner = () => {
           msOverflowStyle: 'none'
         }}
       >
-        <div className="flex gap-6 py-2 px-4 md:px-8 min-h-[340px] md:min-h-[420px]">
+        <div className="flex gap-6 py-2 px-4 md:px-8 min-h-[420px] md:min-h-[520px]">
           {newsItems.map((item, index) => (
             <div 
               key={item.id} 
-              className={`relative min-w-[300px] md:min-w-[400px] flex-shrink-0 bg-card rounded-lg overflow-hidden border border-border/40 hover:shadow-lg transition-all duration-500 ${
+              className={`relative min-w-[350px] md:min-w-[500px] flex-shrink-0 bg-card rounded-lg overflow-hidden border border-border/40 hover:shadow-lg transition-all duration-500 ${
                 activeItem === item.id ? 'ring-2 ring-primary' : ''
               }`}
               onMouseEnter={() => setActiveItem(item.id)}
@@ -266,7 +278,7 @@ const NewsBanner = () => {
                 opacity: 0,
               }}
             >
-              <div className="h-48 md:h-60 relative overflow-hidden">
+              <div className="h-60 md:h-80 relative overflow-hidden">
                 <img 
                   src={item.imageUrl} 
                   alt={item.title} 
@@ -276,31 +288,30 @@ const NewsBanner = () => {
                   }}
                   loading="lazy"
                 />
-                <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/60 via-transparent to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="flex justify-between items-center">
-                    <Badge className={`${getBadgeClass(item.type)} flex items-center px-3 py-1`}>
+                    <Badge className={`${getBadgeClass(item.type)} flex items-center px-3 py-1 shadow-md`}>
                       {getBadgeIcon(item.type)}
                       {getBadgeText(item.type)}
                     </Badge>
-                    <div className="text-xs text-white/80 bg-black/40 px-2 py-1 rounded backdrop-blur-sm">
+                    <div className="text-xs text-white bg-black/50 px-2 py-1 rounded backdrop-blur-sm">
                       {new Date(item.publishDate || item.createdAt).toLocaleDateString('ru-RU')}
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="p-4 md:p-6">
-                <h3 className="font-unbounded text-lg md:text-xl mb-3 line-clamp-2 transition-colors duration-300"
+              <div className="p-4 md:p-8">
+                <h3 className="font-unbounded text-lg md:text-2xl mb-4 line-clamp-2 transition-colors duration-300"
                   style={{
                     color: activeItem === item.id ? 'hsl(var(--primary))' : ''
                   }}
                 >
                   {item.title}
                 </h3>
-                <p className="text-muted-foreground text-sm mb-4 line-clamp-3 md:line-clamp-4">{item.description}</p>
+                <p className="text-muted-foreground text-sm md:text-base mb-6 line-clamp-4 md:line-clamp-6">{item.description}</p>
                 <Link 
                   href={`/news/${item.id}`} 
-                  className="inline-flex items-center text-sm text-primary hover:text-primary/90 transition-all group mt-2"
+                  className="inline-flex items-center text-sm md:text-base text-primary hover:text-primary/90 transition-all group mt-2"
                 >
                   <span className="border-b border-transparent group-hover:border-primary transition-all">Подробнее</span>
                   <ArrowRight className="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" />
